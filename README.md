@@ -14,8 +14,6 @@
 ## 📌 Introduction
 **MyNestEgg** is a simple yet powerful web application designed to help users understand the magic of compound interest and take the first step in planning their financial future.
 
-
-<br><br>
 <a name="nestegg"></a>
 ### What is "NestEgg"?
 
