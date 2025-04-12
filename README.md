@@ -75,5 +75,6 @@ This is currently a solo portfolio project, but suggestions and feedback are alw
 ## 📬 Contact
 
 Feel free to reach out with questions, ideas, or collaborations!
+
 Daniel Lawand: daniel.lawand@gmail.com
 
