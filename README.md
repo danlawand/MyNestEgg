@@ -11,13 +11,13 @@
 
 <br><br>
 <a name="mynestegg"></a>
-## Introduction
+## 📌 Introduction
 **MyNestEgg** is a simple yet powerful web application designed to help users understand the magic of compound interest and take the first step in planning their financial future.
 
 
 <br><br>
 <a name="nestegg"></a>
-### 📌 What is "NestEgg"?
+### What is "NestEgg"?
 
 A **nest egg** is a sum of money that has been saved or invested for the future. The term is commonly used when referring to retirement savings or long-term investments. The idea is to build and grow your financial "egg" over time — safely and steadily — until it’s ready to be used when you need it most.
 
