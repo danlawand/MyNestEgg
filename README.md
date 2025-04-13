@@ -34,6 +34,7 @@ This project was built with the goal of combining my skills in web development w
 - Accepts:
   - Initial amount
   - Monthly contributions
+  - Annual Contribution (e.g. Bonuses, 13rd salary or PPR)
   - Interest rate (monthly or annual)
   - Duration (in months or years)
   - Annual contribution growth (e.g. inflation or salary increase)
