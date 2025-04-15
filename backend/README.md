@@ -3,6 +3,6 @@
 
 ## How to run:
 
-$ cd MyEggNest/backend
+$ cd MyNestEgg/backend
 $ eval $(poetry env activate)
 $ fastapi dev app/main.py

@@ -1,118 +1,57 @@
 from fastapi import APIRouter
+from pydantic import BaseModel
 
 router = APIRouter()
 
+class CalculatorSettings(BaseModel):
+    init_amount: float
+    monthly_contribution: float
+    percetage_interest_rate: float
+    is_interest_rate_annual: bool
+    period: int
+    is_period_in_years: bool
+    annual_contribution: float | None = None
+    percetage_annual_contribution_growth: float | None = None
+
 
 @router.post("/calculate/")
-# def calulate(
-#     init_amount: float,
-#     monthly_contribution: float,
-#     rate: float,
-#     years: int,
-# ):
-#     rate = rate/100
-#     monthly_rate = (1 + rate)**(1/12) - 1
-#     '''
-#         converte duração anual para duração mensal
-#         interest_rate anual ===> mensal
-
-#         total = init * (1+interest_rate)^duration
-
-#         monthly_total = sum y=0 to years-1 {
-#             monthly_contr
-#                 *
-#             (1+annual_growth)**y 
-#                 * 
-#             [(1+month_rate)**(total_months - 12*y) - (1+month_rate)**(total_months - 12(y+1))]/month_rate
-#         }
-
-#         annual_contr_total = sum y=1 to years {
-#             annual_contribution 
-#                 *
-#             (1+annual_growth)**(y-1)
-#                 *
-#             (1+month_rate)**(total_months - 12*y)
-#         }
-#     '''
-
-#     total = init_amount * (1+(rate/100))**years
-
-#     monthly_total = 0
-#     for year in range(years):
-#         monthly_total = monthly_contribution * ((1+monthly_rate)**(duration_in_months - 12*year) - 1)/monthly_rate
-
-#     total += monthly_total
-
-
-
-
-#     return {"Total": total}
-
-
-
 def calulate(
-    init_amount: float,
-    monthly_contribution: float,
-    annual_contribution: float,
-    interest_rate: float,
-    is_interest_rate_annual: bool,
-    duration: int,
-    is_duration_in_years: bool,
-    annual_contribution_growth: float,
+    settings: CalculatorSettings
 ):
-    # interest_rate not in percentage
+    total_invested = 0
+    interest_rate = settings.percetage_interest_rate/100
+    annual_contribution_growth = settings.percetage_annual_contribution_growth/100
     
-    if not is_duration_in_years:
-        duration_in_years = duration//12
-        duration_in_months = duration
+    if not settings.is_period_in_years:
+        period_in_years = settings.period//12
+        period_in_months = settings.period
     else:
-        duration_in_years = duration
-        duration_in_months = duration*12
+        period_in_years = settings.period
+        period_in_months = settings.period*12
     
-    if is_interest_rate_annual:
+    if settings.is_interest_rate_annual:
         monthly_rate = (1 + interest_rate)**(1/12) - 1
     else:
         monthly_rate = interest_rate
 
-    '''
-        converte duração anual para duração mensal
-        interest_rate anual ===> mensal
-
-        total = init * (1+interest_rate)^duration
-
-        monthly_total = sum y=0 to years-1 {
-            monthly_contr
-                *
-            (1+annual_growth)**y 
-                * 
-            [(1+month_rate)**(total_months - 12*y) - (1+month_rate)**(total_months - 12(y+1))]/month_rate
-        }
-
-        annual_contr_total = sum y=1 to years {
-            annual_contribution 
-                *
-            (1+annual_growth)**(y-1)
-                *
-            (1+month_rate)**(total_months - 12*y)
-        }
-    '''
-
-    total = init_amount * (1+monthly_rate)**duration_in_months
+    total = settings.init_amount * (1+monthly_rate)**period_in_months
 
     monthly_total = 0
-    for year in range(duration_in_years):
-        current_monthly_contribution = monthly_contribution * (1+annual_contribution_growth)**year 
-        twelve_month_rate = (1+monthly_rate)**(duration_in_months - 12*year) 
-        rate_until_the_end = (1+monthly_rate)**(duration_in_months - 12*(year+1))
+    for year in range(period_in_years):
+        total_invested += settings.monthly_contribution*12
+        current_monthly_contribution = settings.monthly_contribution * (1+annual_contribution_growth)**year 
+        twelve_month_rate = (1+monthly_rate)**(period_in_months - 12*year) 
+        rate_until_the_end = (1+monthly_rate)**(period_in_months - 12*(year+1))
         monthly_total += current_monthly_contribution * ((twelve_month_rate-rate_until_the_end)/monthly_rate)
     total += monthly_total
 
     total_annual_contribution = 0
-    for year in range(1, duration_in_years+1):
-        current_annual_contribution = annual_contribution * (1+annual_contribution_growth)**(year-1)
-        rate_until_the_end = (1+monthly_rate)**(duration_in_months - 12*year)
+    for year in range(1, period_in_years+1):
+        total_invested += settings.annual_contribution
+        current_annual_contribution = settings.annual_contribution * (1+annual_contribution_growth)**(year-1)
+        rate_until_the_end = (1+monthly_rate)**(period_in_months - 12*year)
         total_annual_contribution += current_annual_contribution * rate_until_the_end
     total += total_annual_contribution
+    total_interest_earnings =  total-total_invested
 
-
-    return {"Total": total}
+    return {"Total": total, "Total Invested": total_invested, "Total Interest Earnings": total_interest_earnings}
