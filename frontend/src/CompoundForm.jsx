@@ -47,7 +47,7 @@ const CompoundForm = () => {
                 <option value="months">Months</option>
             </select>
             <input name="annualContribution" type="number" placeholder="annualContribution" onChange={handleChange} />
-            <input name="contributionGrowth" type="number" placeholder="Annual Contribution Growth (%)" onChange={handleChange} />
+            <input name="percetageAnnualContributionGrowth" type="number" placeholder="Annual Contribution Growth (%)" onChange={handleChange} />
 
             <button type="submit">Calculate</button>
         </form>
